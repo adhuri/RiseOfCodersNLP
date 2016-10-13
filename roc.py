@@ -23,12 +23,18 @@ def get_sentence(filename):
 
     return str(root.find('sentences').text)
 
+def getall_sentences(string):
+    return string.split(".\n")
+
 def NaturalLanguageProcessing(title,string):
     """
     Write the code for NLP stuff here
     :return: return array list
     """
     print ("In NLP , Title :",title)
+
+    sentences=getall_sentences(string)
+
     return []
 
 def get_title(filename):
