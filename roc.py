@@ -1,5 +1,6 @@
 import xml.etree.ElementTree as ET
-from xml.parsers import expat
+
+import re
 
 
 folder_name="training_data"
@@ -12,14 +13,35 @@ generated_catchphrases=[]
 
 
 def get_catchphrases(filename):
+    tree = ET.parse(filename)
+    root = tree.getroot()
+    return [l.text for l in root.find('catchphrases').findall('catchphrase') ]
+
+def get_sentence(filename):
+    tree = ET.parse(filename)
+    root = tree.getroot()
+
+    return str(root.find('sentences').text)
+
+def NaturalLanguageProcessing(string):
+    """
+    Write the code for NLP stuff here
+    :return: return array list
+    """
+
     return []
 
 
-def get_sentences(filename):
-    return []
 
-
-
+def fix_xml(filename):
+    #Read file and save it back in temp folder
+    pattern=re.compile(".*\"id=c[0-9]*\".*")
+    with open(filename) as text_file:
+        newlines =[ line.replace("\"id=c","id=\"c")  if pattern.match(line) else line  for line in text_file]
+    #Write to File
+    with open(filename, 'w') as f:
+        for s in newlines:
+            f.write(s)
 
 def roc(filename):
     """
@@ -30,9 +52,17 @@ def roc(filename):
     """
     print ("For file : " +filename )
     #parser = ET.XMLParser(encoding="utf-8")
-    tree = ET.parse(folder_name+'/'+filename,parser=expat.ParserCreate('ASCII'))
+
+    fix_xml(filename)
+    catchphrases=get_catchphrases(filename)
+    blob=get_sentence(filename)
+    #print blob
+    generated_catchphrases=NaturalLanguageProcessing(blob)
+    assert type(generated_catchphrases)==list, " Return list from NaturalLanguageProcessing"
 
 
+
+    #print "\n".join(catchphrases)
 
 
 def get_precision(a,g):
@@ -55,7 +85,7 @@ def print_results():
     print ("Ratio avg(count(generated_catchphrase)): avg(count(actual_catchphrase))- " , get_ratio_g_a(catchphrases,generated_catchphrases))
 
 if __name__=="__main__":
-    roc("06_6.xml")
+    roc(folder_name+"/"+"06_6.xml")
     print_results()
 
 
