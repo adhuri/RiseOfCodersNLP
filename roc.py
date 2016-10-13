@@ -27,23 +27,6 @@ def getall_sentences(string):
     return string.split(".\n")
 
 
-# Method that runs through all sentences and checks the number of keywords present in that sentences
-def get_summary(text,list_keywords):
-    summary=""
-    list_sentences=getall_sentences(text)
-    for each sentence in list_sentences:
-        for each keyword in list_keywords:
-            count=0;
-            if keyword in sentence:
-                count+=1
-                if count>1:
-                    summary=summary+sentence
-
-    return summary
-
-
-
-
 def NaturalLanguageProcessing(title,string):
     """
     Write the code for NLP stuff here
