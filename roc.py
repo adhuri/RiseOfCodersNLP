@@ -23,14 +23,20 @@ def get_sentence(filename):
 
     return str(root.find('sentences').text)
 
-def NaturalLanguageProcessing(string):
+def NaturalLanguageProcessing(title,string):
     """
     Write the code for NLP stuff here
     :return: return array list
     """
-
+    print ("In NLP , Title :",title)
     return []
 
+def get_title(filename):
+    tree = ET.parse(filename)
+    root = tree.getroot()
+    #print (root.find('name').text)
+    return str(root.find('name').text)
+    #return str(root.find('sentences').text)
 
 
 def fix_xml(filename):
@@ -57,7 +63,7 @@ def roc(filename):
     catchphrases=get_catchphrases(filename)
     blob=get_sentence(filename)
     #print blob
-    generated_catchphrases=NaturalLanguageProcessing(blob)
+    generated_catchphrases=NaturalLanguageProcessing(get_title(filename),blob)
     assert type(generated_catchphrases)==list, " Return list from NaturalLanguageProcessing"
 
 
@@ -79,6 +85,9 @@ def print_results():
     Uses  catchphrases and generated_catchphrases
     Prints Results
     """
+
+    print ("Generated Catchphrases" , generated_catchphrases)
+
     print ("============Results=============")
     print ("Precision :" , get_precision(catchphrases,generated_catchphrases))
     print ("Recall :" , get_recall(catchphrases,generated_catchphrases))
