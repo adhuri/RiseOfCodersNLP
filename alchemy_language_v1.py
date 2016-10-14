@@ -6,9 +6,6 @@ from nlp import get_summary
 import os
 
 
-
-
-
 def generate_keywords_dict():
     global keywords_dict
     alchemy_language = AlchemyLanguageV1(api_key='c967d6e7e3bb22b82ea026dfabb30af595729d75');
