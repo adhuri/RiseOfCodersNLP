@@ -2,18 +2,50 @@ import json
 import itertools
 import difflib
 
+
 tolerance=0.5
+
+
+def _byteify(data, ignore_dicts = False):
+	# if this is a unicode string, return its string representation
+	if isinstance(data, unicode):
+		return data.encode('utf-8')
+	# if this is a list of values, return list of byteified values
+	if isinstance(data, list):
+		return [ _byteify(item, ignore_dicts=True) for item in data ]
+	# if this is a dictionary, return dictionary of byteified keys and values
+	# but only if we haven't already byteified it
+	if isinstance(data, dict) and not ignore_dicts:
+		return {
+			_byteify(key, ignore_dicts=True): _byteify(value, ignore_dicts=True)
+			for key, value in data.iteritems()
+		}
+	# if it's anything else, return it in its original form
+	return data
+
+def json_load_byteified(file_handle):
+	return _byteify(
+		json.load(file_handle, object_hook=_byteify),
+		ignore_dicts=True
+	)
+
+def json_loads_byteified(json_text):
+	return _byteify(
+		json.loads(json_text, object_hook=_byteify),
+		ignore_dicts=True)
 
 def create_keyword(filename):
 	return Keyword(filename)
 
 class Keyword:
 	def __init__(self,json1):
+		temp=""
 		with open(json1) as data_file:
-			data = json.load(data_file)
+			data=json.load(data_file)
 		self.casename = data['casename']
 		self.keywords= data['keywords']
 		self.filename =data['filename']
+
 
 
 
@@ -28,6 +60,9 @@ class KeywordMapping:
 
 	def getfilelist(self):
 		return [str(i) for i in self.filelist]
+
+	def getcasename(self):
+		return [i.casename for i in self.filelist]
 
 	def __str__(self):
 		return str(str(self.keywordlist) +" --- "+  ",".join([str(i) for i in self.filelist]))
@@ -69,8 +104,8 @@ def groupkeywords(allkeywordlist):
 
 
 
-def getGraph(filenamelist):
-	f=[Keyword(filename) for filename in filenamelist]
+def getGraph(dir,filenamelist):
+	f=[Keyword(dir+"/"+filename) for filename in filenamelist]
 
 	for fs in f:
 		print fs
