@@ -1,7 +1,7 @@
 import xml.etree.ElementTree as ET
 
 import re
-
+import codecs
 
 folder_name="training_data"
 catchphrases=[]
@@ -47,15 +47,25 @@ def get_title(filename):
 
 
 def fix_xml(filename):
+    print filename
     #Read file and save it back in temp folder
     pattern=re.compile(".*\"id=c[0-9]*\".*")
+    #pattern=re.compile(".")
     with open(filename) as text_file:
         newlines =[ line.replace("\"id=c","id=\"c")  if pattern.match(line) else line  for line in text_file]
     #Write to File
-    with open(filename, 'w') as f:
+    #with open(filename, 'w') as f:
+    with codecs.open(filename, 'w', encoding='utf8') as f:
         for s in newlines:
-            f.write(s)
 
+            if '&' not in s and '0x' not in s:
+                f.write(s)
+            else:
+                #print("Replacing ")
+                if '0x' in s:
+                    f.write(s.replace('0x',''))
+                else:
+                    f.write(s.replace('&',''))
 def roc(filename):
     """
     Call ROC for each XML file to do 3 things

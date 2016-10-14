@@ -3,6 +3,7 @@ from roc import getall_sentences
 
 # Method that runs through all sentences and checks the number of keywords present in that sentences
 def get_summary(text,list_keywords):
+    acc_threshold=0.4;
     summary=[]
     list_sentences=[]
     list_sentences=getall_sentences(text)
@@ -12,7 +13,7 @@ def get_summary(text,list_keywords):
         for keyword in list_keywords:
             if keyword in sentence:
                 count_matched+=len(keyword.split())
-                if count_matched/len(sentence.split())>0.3:
+                if count_matched/len(sentence.split())>acc_threshold:
                     count_matched=0
                     summary.append(sentence)
                     break
