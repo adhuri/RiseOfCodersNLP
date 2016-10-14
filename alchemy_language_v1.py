@@ -31,11 +31,11 @@ url = 'https://developer.ibm.com/watson/blog/2015/11/03/price-reduction-for-wats
 # print(json.dumps(alchemy_language.publication_date(url=url), indent=2))
 # print(json.dumps(alchemy_language.taxonomy(url=url), indent=2))
 
-output_file = open('output.json', 'w')
+output_file = open('output16.json', 'w')
 
 # combined_operations = ['page-image', 'entity', 'keyword', 'title', 'author', 'taxonomy', 'concept', 'doc-emotion']
 combined_operations = ['keyword']
-filename='training_data/06_9.xml'
+filename='training_data/06_16.xml'
 fix_xml(filename)
 extracted_text=get_sentence(filename)
 
