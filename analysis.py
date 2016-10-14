@@ -1,7 +1,7 @@
 import json
 import difflib
-import nltk
-
+#import nltk
+tolerance=0.6
 with open('9.json') as data_file:    
     data1 = json.load(data_file)
 
@@ -19,5 +19,5 @@ for i in data1['keywords']:
 		#d = similar(i, j);
 		#text = nltk.Text(i.lower() for i in nltk.corpus.brown.words())
 		#d = text.similar(j);
-		if(d > 0.60):
-			print i,j,d;
+		if(d > tolerance):
+			print ("%10s | %10s | %3.2f "%(i,j,d))
