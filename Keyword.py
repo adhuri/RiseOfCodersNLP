@@ -16,16 +16,21 @@ class Keyword:
 		self.filename =data['filename']
 
 
+
+
 	def __str__(self):
-		return  str(self.filename +" : "+ str(len(self.keywords)))
+		return  str(self.filename)#+ "," + self.casename)#+" : "+ str(len(self.keywords)))
 
 class KeywordMapping:
 	def __init__(self,keywordlist=[],filelist=[]):
 		self.keywordlist=keywordlist
 		self.filelist=filelist
 
+	def getfilelist(self):
+		return [str(i) for i in self.filelist]
+
 	def __str__(self):
-		return str(",".join(self.keywordlist) +"--" ",".join(self.filelist))
+		return str(str(self.keywordlist) +" --- "+  ",".join([str(i) for i in self.filelist]))
 
 
 
@@ -64,15 +69,31 @@ def groupkeywords(allkeywordlist):
 
 
 
-if __name__=="__main__":
-
-	f=[Keyword(filename) for filename in ["6.json","9.json","16.json"]]
+def getGraph(filenamelist):
+	f=[Keyword(filename) for filename in filenamelist]
 
 	for fs in f:
 		print fs
 	joint= joinkeywords(f)
 
-	for i in (groupkeywords(joint)):
+	savedgroups=groupkeywords(joint)
+
+	keywordmappinglist=[]
+	for i in savedgroups:
+		#print i
+		tempfilelist=[]
+		for j in f: # Check in each file list about the keyword groups
+			if bool(set(j.keywords) &(set(i))):
+				tempfilelist.append(j)
+		keywordmappinglist.append(KeywordMapping(list(set(i)),tempfilelist))
+
+	return keywordmappinglist
+
+
+
+
+if __name__=="__main__":
+	for i in getGraph(["6.json","9.json","16.json"]):
 		print i
 
 
